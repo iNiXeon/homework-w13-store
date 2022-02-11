@@ -1,23 +1,32 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import Head from '../components/bodyHeader'
-import Main from '../components/itemGoods'
+import { ConnectedRouter } from 'connected-react-router'
+import { Switch, Route, StaticRouter } from 'react-router-dom'
+
+import store, { history } from '../redux'
+
+import BodyHeader from '../components/bodyHeader'
 import NotFound from '../components/404'
-import store from '../redux'
+import Main from '../components/itemGoods'
+import Startup from './startup'
 
 import '../css/main.css'
 
-const RootComponent = () => {
+const RouterSelector = (props) =>
+  typeof window !== 'undefined' ? <ConnectedRouter {...props} /> : <StaticRouter {...props} />
+
+const RootComponent = (props) => {
   return (
     <Provider store={store}>
-      <Head />
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Main} />
-          <Route component={NotFound} />
-        </Switch>
-      </Router>
+      <RouterSelector history={history} location={props.location} context={props.context}>
+        <BodyHeader />
+        <Startup>
+          <Switch>
+            <Route exact path="/" component={Main} />
+            <Route component={NotFound} />
+          </Switch>
+        </Startup>
+      </RouterSelector>
     </Provider>
   )
 }

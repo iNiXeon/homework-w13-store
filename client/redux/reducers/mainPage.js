@@ -33,5 +33,5 @@ export function actionGetCurrency() {
 }
 
 export const actionChangeCurrency = (currencyName) => {
-    return { type: actions.CHANGE_CURRENCY, payload: currencyName }
+  return { type: actions.CHANGE_CURRENCY, payload: currencyName }
 }

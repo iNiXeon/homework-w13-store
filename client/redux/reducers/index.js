@@ -1,9 +1,11 @@
+import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux'
 import magazine from './mainPage'
 
-const rootReducer = () =>
+const rootReducer = (history) =>
   combineReducers({
-    magazine
+    magazine,
+    router: connectRouter(history)
   })
 
 export default rootReducer
