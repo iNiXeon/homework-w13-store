@@ -4,14 +4,41 @@ import cors from 'cors'
 import sockjs from 'sockjs'
 import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
-
+import axios from 'axios'
 import cookieParser from 'cookie-parser'
 import config from './config'
 import Html from '../client/html'
 
 require('colors')
+const { readFile, stat } = require('fs').promises
+
+const getCurrency = async () => {
+  let currency = ''
+  await axios('https://api.exchangerate.host/latest?base=USD&symbols=USD,EUR,CAD').then(
+    async ({ data }) => {
+      currency = data.rates
+    }
+  )
+  return currency
+}
+
+const getGoods = async () => {
+  let response = {}
+  const pathToFile = './data/products.json'
+  await stat(pathToFile).then(
+    await readFile(pathToFile, { encoding: 'utf8' })
+      .then(async (text) => {
+        response = await JSON.parse(text)
+      })
+      .catch((err) => {
+        return err
+      })
+  )
+  return response
+}
 
 let Root
+
 try {
   // eslint-disable-next-line import/no-unresolved
   Root = require('../dist/assets/js/ssr/root.bundle').default
@@ -34,7 +61,25 @@ const middleware = [
 
 middleware.forEach((it) => server.use(it))
 
-server.use('/api/', (req, res) => {
+server.get('/api/v1/currency', async (req, res) => {
+  res.status(200)
+  res.json(await getCurrency())
+  res.end()
+})
+
+server.get('/api/v1/goods', async (req, res) => {
+  res.status(200)
+  res.json(await getGoods())
+  res.end()
+})
+
+server.delete('/api/v1/logs', async (req, res) => {
+  res.status(200)
+  res.json({ status: 'ok' })
+  res.end()
+})
+
+server.use('/api/*', (req, res) => {
   res.status(404)
   res.end()
 })

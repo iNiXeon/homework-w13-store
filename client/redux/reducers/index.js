@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux'
-import { connectRouter } from 'connected-react-router'
-import auth from './auth'
+import magazine from './mainPage'
 
-const createRootReducer = (history) =>
+const rootReducer = () =>
   combineReducers({
-    router: connectRouter(history),
-    auth
+    magazine
   })
 
-export default createRootReducer
+export default rootReducer

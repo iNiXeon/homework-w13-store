@@ -158,14 +158,14 @@ const config = {
           { from: 'assets/manifest.json', to: 'manifest.json' },
           { from: 'index.html', to: 'index.html' },
 
-          {
-            from: 'install-sw.js',
-            to: 'js/install-sw.js',
-            transform: (content) => {
-              return content.toString().replace(/APP_VERSION/g, APP_VERSION)
-            }
-          },
-          { from: 'vendors', to: 'vendors' },
+          // {
+          //   from: 'install-sw.js',
+          //   to: 'js/install-sw.js',
+          //   transform: (content) => {
+          //     return content.toString().replace(/APP_VERSION/g, APP_VERSION)
+          //   }
+          // },
+          // { from: 'vendors', to: 'vendors' },
           {
             from: 'html.js',
             to: 'html.js',
