@@ -18,13 +18,25 @@ const Header = () => {
         <div className="BodyBottomHeader__currency flex">
           <div>Валюта:</div>
           <div className="flex spaced">
-            <button type="button" className="ml-1" onClick={() => actionChangeCurrency('USD')}>
+            <button
+              type="button"
+              className="ml-1"
+              onClick={() => dispatch(actionChangeCurrency('USD'))}
+            >
               [USD:{currency.USD.toFixed(2)}]
             </button>
-            <button type="button" className="ml-1" onClick={() => actionChangeCurrency('EUR')}>
+            <button
+              type="button"
+              className="ml-1"
+              onClick={() => dispatch(actionChangeCurrency('EUR'))}
+            >
               [EUR:{currency.EUR.toFixed(2)}]
             </button>
-            <button type="button" className="ml-1" onClick={() => actionChangeCurrency('CAD')}>
+            <button
+              type="button"
+              className="ml-1"
+              onClick={() => dispatch(actionChangeCurrency('CAD'))}
+            >
               [CAD:{currency.CAD.toFixed(2)}]
             </button>
           </div>

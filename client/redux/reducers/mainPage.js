@@ -1,7 +1,7 @@
 import axios from 'axios'
 import actions from '../listActions'
 
-const initialState = { goods: [], currency: { USD: 0, EUR: 0, CAD: 0, current: 'USD' } }
+const initialState = { goods: [], cart: [], currency: { USD: 0, EUR: 0, CAD: 0, current: 'USD' } }
 
 export default (state = initialState, action = {}) => {
   switch (action.type) {
@@ -11,6 +11,8 @@ export default (state = initialState, action = {}) => {
       return { ...state, currency: { ...state.currency, ...action.payload } }
     case actions.CHANGE_CURRENCY:
       return { ...state, currency: { ...state.currency, current: action.payload } }
+    case actions.ADD_TO_CART:
+      return { ...state, cart: action.payload }
     default:
       return state
   }
@@ -34,4 +36,8 @@ export function actionGetCurrency() {
 
 export const actionChangeCurrency = (currencyName) => {
   return { type: actions.CHANGE_CURRENCY, payload: currencyName }
+}
+
+export const actionAddItemToCart = (itemId) => {
+  return { type: actions.ADD_TO_CART, payload: itemId }
 }

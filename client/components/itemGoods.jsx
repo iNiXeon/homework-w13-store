@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { actionGetAllGoods, actionGetCurrency } from '../redux/reducers/mainPage'
+import { actionGetAllGoods } from '../redux/reducers/mainPage'
 
 const itemsInBasket = 0
 
@@ -16,7 +16,6 @@ const showItemsInBasket = () => {
 
 const Good = (item, currency) => {
   const { title, description, price, image, id } = item
-  console.log(currency)
   return (
     <div key={id} className="flex flex-start m-2 h-[30vh] w-[37vh]">
       <div className="sticky flex-col container bg-neutral-100 p-1 rounded-xl h-[100%] w-[100%] ">
@@ -30,7 +29,9 @@ const Good = (item, currency) => {
           </div>
         </div>
         <div className="p-1 absolute flex bottom-1 align-bottom w-full">
-          <div className="relative flex justify-start row w-[40%]">{price} </div>
+          <div className="relative flex justify-start row w-[40%]">
+            {price * currency[currency.current].toFixed(2)}{' '}
+          </div>
           <div className="relative flex justify-end row w-[60%] pr-2">
             <button type="button" className="rounded w-10 h-8 ">
               <svg
@@ -85,11 +86,9 @@ const ItemGoods = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(actionGetAllGoods())
-    dispatch(actionGetCurrency())
   }, [])
   const goods = useSelector((state) => state.magazine.goods)
   const currency = useSelector((state) => state.magazine.currency)
-  console.log(currency)
   return (
     <div>
       <div className="flex m-1 flex-wrap spaced">
