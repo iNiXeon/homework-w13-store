@@ -13,6 +13,20 @@ export default (state = initialState, action = {}) => {
       return { ...state, currency: { ...state.currency, current: action.payload } }
     case actions.ADD_TO_CART:
       return { ...state, cart: action.payload }
+    case actions.SORT_BY_NAME:
+      return {
+        ...state,
+        goods: state.goods.sort((a, b) => {
+          return a.title > b.title
+        })
+      }
+    case actions.SORT_BY_PRICE:
+      return {
+        ...state,
+        goods: state.goods.sort((a, b) => {
+          return a.price > b.price
+        })
+      }
     default:
       return state
   }
@@ -40,4 +54,12 @@ export const actionChangeCurrency = (currencyName) => {
 
 export const actionAddItemToCart = (itemId) => {
   return { type: actions.ADD_TO_CART, payload: itemId }
+}
+
+export const actionSortByName = () => {
+  return { type: actions.SORT_BY_NAME }
+}
+
+export const actionSortByPrice = () => {
+  return { type: actions.SORT_BY_PRICE }
 }
