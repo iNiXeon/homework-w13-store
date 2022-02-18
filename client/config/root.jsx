@@ -8,6 +8,7 @@ import store, { history } from '../redux'
 import BodyHeader from '../components/bodyHeader'
 import NotFound from '../components/404'
 import Main from '../components/itemGoods'
+import Basket from '../components/backet'
 import Startup from './startup'
 
 import '../css/main.css'
@@ -23,6 +24,7 @@ const RootComponent = (props) => {
         <Startup>
           <Switch>
             <Route exact path="/" component={Main} />
+            <Route exact path="/basket" component={Basket} />
             <Route component={NotFound} />
           </Switch>
         </Startup>

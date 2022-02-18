@@ -1,18 +1,36 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { actionGetCurrency, actionChangeCurrency, actionSortByName, actionSortByPrice } from '../redux/reducers/mainPage'
+import {
+  actionGetCurrency,
+  actionChangeCurrency,
+  actionSortByName,
+  actionSortByPrice
+} from '../redux/reducers/mainPage'
 
 const Header = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(actionGetCurrency())
     dispatch(actionChangeCurrency('USD'))
-    dispatch(actionSortByPrice())
     dispatch(actionSortByName())
+    dispatch(actionSortByPrice())
   }, [])
 
   const currency = useSelector((state) => state.magazine.currency)
+  const cart = useSelector((state) => state.magazine.cart)
+  const goods = useSelector((state) => state.magazine.goods)
+  const inCart = Object.keys(cart)
+    .filter((itemID) => cart[itemID] > 0)
+    .reduce((sumCart, itemID) => {
+      return (
+        sumCart +
+        parseInt(
+          goods.filter((good) => good.id === itemID).map((good) => good.price * cart[itemID]),
+          10
+        )
+      )
+    }, 0)
 
   return (
     <div>
@@ -22,7 +40,8 @@ const Header = () => {
         </Link>
         <div className="ml-auto">
           <Link id="order-count" to="/basket">
-            Корзина(0)
+            Корзина({(inCart * currency[currency.current].toFixed(2)).toFixed(2)}
+            &nbsp;{currency.current})
           </Link>
         </div>
       </div>
@@ -55,11 +74,11 @@ const Header = () => {
             </div>
           </div>
           <div className="flex flex-row ml-auto">
-            <button type="button" className="sort-price" onClick={dispatch(actionSortByPrice())}>
+            <button type="button" id="sort-price" onClick={() => dispatch(actionSortByPrice())}>
               ⇵ цена
             </button>
             <div>&nbsp;|&nbsp;</div>
-            <button type="button" className="sort-name" onClick={dispatch(actionSortByName())}>
+            <button type="button" id="sort-name" onClick={() => dispatch(actionSortByName())}>
               ⇵ имя
             </button>
           </div>

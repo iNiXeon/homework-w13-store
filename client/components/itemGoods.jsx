@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { actionGetAllGoods } from '../redux/reducers/mainPage'
+import {
+  actionGetAllGoods,
+  actionAddItemToCart,
+  actionRemoveItemFromCart
+} from '../redux/reducers/mainPage'
 
-const itemsInBasket = 0
-
-const showItemsInBasket = () => {
+const showItemsInBasket = (itemsInBasket) => {
   if (itemsInBasket > 0) {
     if (itemsInBasket < 100) {
       return itemsInBasket
@@ -14,26 +16,34 @@ const showItemsInBasket = () => {
   return ''
 }
 
-const Good = (item, currency) => {
+const Good = (item, currency, itemsInBasket, dispatch) => {
   const { title, description, price, image, id } = item
+
   return (
-    <div key={id} className="flex flex-start m-2 h-[30vh] w-[37vh]">
+    <div key={id} className="card flex flex-start m-2 h-[30vh] w-[37vh]">
       <div className="sticky flex-col container bg-neutral-100 p-1 rounded-xl h-[100%] w-[100%] ">
         <div className=" p-1 flex flex-start flex-row flex-nowrap">
-          <div className="flex justify-start row w-[90%] font-semibold border-b">{title}</div>
+          <div className="card__title flex justify-start row w-[90%] font-semibold border-b">
+            {title}
+          </div>
         </div>
-        <div className="p-1 flex flex-nowrap">
+        <div className="card__image p-1 flex flex-nowrap">
           <div className="flex justify-start row w-[60%] font-light">{description}</div>
           <div className="flex justify-end row w-[40%] max-h-[18vh] mr-1">
-            <img className="object-cover max-h-[18vh]" src={image} alt="" />
+            <img className="card__image object-cover max-h-[18vh]" src={image} alt="" />
           </div>
         </div>
         <div className="p-1 absolute flex bottom-1 align-bottom w-full">
-          <div className="relative flex justify-start row w-[40%]">
-            {price * currency[currency.current].toFixed(2)}{' '}
+          <div className="card__price relative flex justify-start row">
+            {price * currency[currency.current].toFixed(2)}
           </div>
+          <div className="currency  w-[40%]">&nbsp; {currency.current}</div>
           <div className="relative flex justify-end row w-[60%] pr-2">
-            <button type="button" className="rounded w-10 h-8 ">
+            <button
+              type="button"
+              className="rounded w-10 h-8 "
+              onClick={() => dispatch(actionAddItemToCart(id))}
+            >
               <svg
                 className="spaced m-1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -52,13 +62,17 @@ const Good = (item, currency) => {
                   x="80"
                   y="160"
                   alignmentBaseline="before-edge"
-                  className="Rrrrr align-text-bottom "
+                  className="Rrrrr align-text-bottom card__product-amount"
                 >
-                  {showItemsInBasket()}
+                  {showItemsInBasket(itemsInBasket)}
                 </text>
               </svg>
             </button>
-            <button type="button" className="rounded w-10 h-8">
+            <button
+              type="button"
+              className="rounded w-10 h-8"
+              onClick={() => dispatch(actionRemoveItemFromCart(id))}
+            >
               <svg
                 className="spaced m-1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,11 +103,13 @@ const ItemGoods = () => {
   }, [])
   const goods = useSelector((state) => state.magazine.goods)
   const currency = useSelector((state) => state.magazine.currency)
+  const cart = useSelector((state) => state.magazine.cart)
   return (
     <div>
       <div className="flex m-1 flex-wrap spaced">
         {Array.from(goods).map((it) => {
-          return Good(it, currency)
+          const itemsInBasket = cart[it.id] || 0
+          return Good(it, currency, itemsInBasket, dispatch)
         })}
       </div>
     </div>
